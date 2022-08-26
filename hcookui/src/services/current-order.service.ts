@@ -8,7 +8,7 @@ import {CurrentOrder} from "../interfaces/current-order";
   providedIn: 'root'
 })
 export class CurrentOrderService {
-  currentOrderUrl = 'http://localhost:8080/api/v1/order';
+  currentOrderUrl = '/api/v1/order';
 
   constructor( private http: HttpClient) {}
 

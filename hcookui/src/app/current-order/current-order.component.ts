@@ -10,11 +10,12 @@ import {CurrentOrderService} from "../../services/current-order.service";
 
 export class CurrentOrderComponent implements OnInit {
 
-  currentOrder: CurrentOrder;
+  currentOrder: CurrentOrder ;
 
   constructor(private  currentOrderService: CurrentOrderService) { }
 
   ngOnInit(): void {
+    this.getCurrentOrder();
   }
 
   getCurrentOrder() {

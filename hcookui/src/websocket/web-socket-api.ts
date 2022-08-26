@@ -2,24 +2,27 @@ import * as Stomp from 'stompjs';
 // import * as SockJS from 'sockjs-client';
 import { AppComponent } from '../app/app.component';
 import * as SockJS from 'sockjs-client';
+import {WeightComponent} from "../app/weight/weight.component";
 
 export class WebSocketAPI {
-  webSocketEndPoint: string = 'http://localhost:8080/hello';
-  topic: string = "/topic/greetings";
+  webSocketEndPoint: string = '/stream/weight-endpoint';
+  topic: string = "/topic/hi";
   stompClient: any;
-  appComponent: AppComponent;
-  constructor(appComponent: AppComponent){
-    this.appComponent = appComponent;
+  weightComponent: WeightComponent;
+
+  constructor(weightComponent: WeightComponent){
+    this.weightComponent = weightComponent;
   }
   _connect() {
     console.log("Initialize WebSocket Connection");
     let ws = new SockJS(this.webSocketEndPoint);
+
     this.stompClient = Stomp.over(ws);
     const _this = this;
     _this.stompClient.connect({}, function (frame) {
-      _this.stompClient.subscribe(_this.topic, function (sdkEvent) {
-        _this.onMessageReceived(sdkEvent);
-      });
+      // _this.stompClient.subscribe(_this.topic, function (sdkEvent) {
+      //   _this.onMessageReceived(sdkEvent);
+      // });
       //_this.stompClient.reconnect_delay = 2000;
     }, this.errorCallBack);
   };
@@ -45,11 +48,11 @@ export class WebSocketAPI {
    */
   _send(message:string) {
     console.log("calling logout api via web socket");
-    this.stompClient.send("/app/hello", {}, JSON.stringify(message));
+   // this.stompClient.send("/api/weight", {}, JSON.stringify(message));
   }
 
   onMessageReceived(message:string) {
     console.log("Message Recieved from Server :: " + message);
-    this.appComponent.handleMessage(JSON.stringify(message));
+    //this.weightComponent.handleMessage(JSON.stringify(message));
   }
 }
