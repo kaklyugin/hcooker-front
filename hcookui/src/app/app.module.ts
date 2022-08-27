@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { CurrentOrderComponent } from './current-order/current-order.component';
 import { WeightComponent } from './weight/weight.component';
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { WeightComponent } from './weight/weight.component';
     AppRoutingModule,
     FormsModule,
     RouterModule,
-    HttpClientModule
+    HttpClientModule,
+    CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
