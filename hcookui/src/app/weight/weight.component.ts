@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {WebSocketAPI} from "../../websocket/web-socket-api";
 import {Observable} from "rxjs";
-import {IWeight} from "../../interfaces/iweight";
+import {IScalesData} from "../../interfaces/iscales-data";
 
 @Component({
   selector: 'app-weight',
@@ -16,7 +16,7 @@ export class WeightComponent implements OnInit {
 
   greeting: string = "init";
 
-  weight: IWeight;
+  iScalesData: IScalesData;
 
   constructor(private changeDetection: ChangeDetectorRef) {
     this.changeDetection.detach()
@@ -49,7 +49,7 @@ export class WeightComponent implements OnInit {
 
   displayMessage(msg:string){
     this.greeting = msg;
-    console.log("greeting var is " + this.greeting);
+    console.log("greeting var is " + this.iScalesData);
     this.changeDetection.detectChanges()
 
   }

@@ -8,7 +8,7 @@ import { webSocket } from 'rxjs/webSocket';
 
 export class WebSocketAPI {
   webSocketEndPoint: string = '/stream/weight-endpoint';
-  topic: string = "/topic/hi";
+  topic: string = "/topic/scalesData";
   stompClient: any;
   weightComponent: WeightComponent|undefined;
   weightSubject$ = new Subject();
@@ -65,9 +65,8 @@ export class WebSocketAPI {
   pushMessageToComponent(msg: any) {
     console.log("Message Recieved from Server :: " + msg);
     // @ts-ignore
-    this.weightComponent.displayMessage(JSON.parse(msg.body).greeting);
-    this.weightSubject$.next("helloworld " +  JSON.parse(msg.body).greeting);
-
+    this.weightComponent.displayMessage(JSON.parse(msg.body).weight);
+    this.weightSubject$.next("helloworld " +  JSON.parse(msg.body).weight);
   }
 
   public getWeight(): any {
