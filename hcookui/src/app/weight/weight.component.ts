@@ -29,7 +29,6 @@ export class WeightComponent implements OnInit {
     const weightObservable = this.webSocketAPI.getWeight();
     weightObservable.subscribe((weightData: string)=>{
      // this.weight = weightData;
-      console.log("weight observable is: " + weightData)
       this.changeDetection.detectChanges();
     })
 
@@ -49,7 +48,6 @@ export class WeightComponent implements OnInit {
 
   displayMessage(msg:string){
     this.greeting = msg;
-    console.log("greeting var is " + this.iScalesData);
     this.changeDetection.detectChanges()
 
   }

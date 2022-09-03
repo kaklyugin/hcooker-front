@@ -14,6 +14,22 @@ export class WebSocketAPI {
   weightSubject$ = new Subject();
 
   constructor() {
+    //FIXME https://stackoverflow.com/questions/22361917/automatic-reconnect-with-stomp-js-in-node-js-application
+    console.log("Initialize WebSocket Connection");
+    let socket  = new SockJS(this.webSocketEndPoint);
+    this.stompClient = Stomp.over(socket);
+    this.stompClient.debug = null;
+    const _this = this;
+
+    _this.stompClient.connect({}, function (frame:any)
+    {
+      console.log("Connected to WebSocket: " + frame)
+      _this.stompClient.subscribe(_this.topic, function (msg:any)
+      {
+        _this.pushMessageToComponent(msg)
+      }),
+        _this.stompClient.reconnect_delay = 2000
+    });
   }
 
   setComponent(weightComponent: WeightComponent)
@@ -21,21 +37,23 @@ export class WebSocketAPI {
     this.weightComponent = weightComponent;
   }
   _connect() {
-    console.log("Initialize WebSocket Connection");
-    let ws = new SockJS(this.webSocketEndPoint);
-
-
-    this.stompClient = Stomp.over(ws);
-    const _this = this;
-    _this.stompClient.connect({}, function (frame:any) {
-      console.log("Connected to WebSocket: " + frame)
-      _this.stompClient.subscribe(_this.topic, function (msg: any) {
-        _this.pushMessageToComponent(msg);
-
-      });
-      _this.stompClient.reconnect_delay = 2000;
-    }, this.errorCallBack);
+    // console.log("Initialize WebSocket Connection");
+    // let socket  = new SockJS(this.webSocketEndPoint);
+    // this.stompClient = Stomp.over(socket);
+    // this.stompClient.debug = null;
+    // const _this = this;
+    //
+    // _this.stompClient.connect({}, function (frame:any)
+    // {
+    //   console.log("Connected to WebSocket: " + frame)
+    //   _this.stompClient.subscribe(_this.topic, function (msg:any)
+    //   {
+    //     _this.pushMessageToComponent(msg)
+    //   }),
+    //   _this.stompClient.reconnect_delay = 2000
+    // });
   };
+
 
   _disconnect() {
     if (this.stompClient !== null) {
@@ -47,7 +65,6 @@ export class WebSocketAPI {
 
   // on error, schedule a reconnection attempt
   errorCallBack(error: string) {
-    console.log("errorCallBack -> " + error)
     setTimeout(() => {
       this._connect();
     }, 5000);
@@ -58,15 +75,12 @@ export class WebSocketAPI {
    * @param {*} message
    */
   _send(message: string) {
-    console.log("calling logout api via web socket");
     this.stompClient.send("/gkz/hello", {}, JSON.stringify(message));
   }
 
   pushMessageToComponent(msg: any) {
-    console.log("Message Recieved from Server :: " + msg);
-    // @ts-ignore
-    this.weightComponent.displayMessage(JSON.parse(msg.body).weight);
-    this.weightSubject$.next("helloworld " +  JSON.parse(msg.body).weight);
+    this.weightComponent?.displayMessage(JSON.parse(msg.body).weight);
+    this.weightSubject$.next( JSON.parse(msg.body).weight);
   }
 
   public getWeight(): any {

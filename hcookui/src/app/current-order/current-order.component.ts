@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {CurrentOrder} from "../../interfaces/current-order";
+import {ICurrentOrder} from "../../interfaces/icurrent-order";
 import {CurrentOrderService} from "../../services/current-order.service";
 
 @Component({
@@ -10,20 +10,47 @@ import {CurrentOrderService} from "../../services/current-order.service";
 
 export class CurrentOrderComponent implements OnInit {
 
-  currentOrder: CurrentOrder ;
+  currentOrder: ICurrentOrder ;
+  currentStepNum: string | undefined;
 
   constructor(private  currentOrderService: CurrentOrderService) { }
 
   ngOnInit(): void {
     this.getCurrentOrder();
   }
+ calculateCurrentStep()
+  {
+    let inComplete = this.currentOrder.dish.steps.find(function(s){return s.completed==false});
+    this.currentStepNum = inComplete?.sequenceNum;
 
-  getCurrentOrder() {
+  }
+
+
+
+getCurrentOrder() {
     this.currentOrderService.getOrder()
       .subscribe({
-        next: (res) => {this.currentOrder = res; console.log('data', res)},
+        next: (res) => {
+          this.currentOrder = res;
+          this.calculateCurrentStep();
+        },
         error: (err) => {alert(err)},
         complete:() =>{}
+      })
+  }
+  updateStepWeight()
+  {
+    this.currentOrderService.updateStepWeight().subscribe(
+      {
+        next: (res) => {
+          this.currentOrder = res;
+          this.calculateCurrentStep();
+        },
+        error: (err) => {
+          alert(err)
+        },
+        complete: () => {
+        }
       })
   }
 }

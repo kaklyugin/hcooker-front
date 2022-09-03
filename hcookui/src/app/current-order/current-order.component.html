@@ -1,5 +1,44 @@
-<p>This is orders component</p>
 <div>
-  <p>Order is </p>
-  <p>{{currentOrder?.orderNo ?? "no order"}}</p>
+  <div class="container mt-5">
+  <h4>
+    <p>Заказ № {{currentOrder?.orderNo ?? "нет заказов"}}</p>
+  </h4>
+    <h3><p>Блюдо: "{{currentOrder?.dish?.dishName ?? "нет названия"}}"</p></h3>
+</div>
+  <div class="container mt-2">
+    <h2>Рецепт</h2>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Шаг</th>
+        <th>Ингредиент</th>
+        <th>Вес по рецепту</th>
+        <th>Отклонение</th>
+        <th>Реальный вес</th>
+        <th>Шаг завершён</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let step of currentOrder?.dish?.steps" [class.selectedStep]="step.sequenceNum==currentStepNum">
+        <td>{{ step.sequenceNum }}</td>
+        <td>{{ step.ingredientName }}</td>
+        <td>{{ step.weight }}</td>
+        <td>{{ step.deviation }}</td>
+        <td>{{ step.realWeight }}</td>
+        <td>
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" [checked]="step.completed==true" [disabled]="true" >
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="container mt-5">
+  <div class="d-grid gap-2 ">
+     <button type="button" (click)="updateStepWeight()" class="btn btn-primary btn-lg" data-bs-toggle="button">Сохранить вес</button>
+  </div>
+    <div class="d-grid gap-2 ">
+      <button type="button"  class="btn btn-danger btn-lg mt-3" data-bs-toggle="button">Следующий заказ</button>
+    </div>
+
+    <div>
 </div>
